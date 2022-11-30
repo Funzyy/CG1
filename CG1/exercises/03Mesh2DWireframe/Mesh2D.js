@@ -47,7 +47,7 @@ function Mesh2DApp() {
     let aspectMatrix = Matrix3.aspect(mCanvas.width, mCanvas.height);
 
     // Zuerst rotation*Skalierung dann * Position und zuletzt * Aspektratio
-    let transform = Matrix3.multiply(Matrix3.multiply(Matrix3.multiply(rotationMatrix, scaleMatrix), translateMatrix), aspectMatrix);
+    let transform = Matrix3.multiply(aspectMatrix, Matrix3.multiply(translateMatrix, (Matrix3.multiply(rotationMatrix, scaleMatrix))));
     let mat3_transform = mGlslProgram.getUniformLocation("mat3_transform");
     // Lab 02, Aufgabe 3(c)
 

@@ -53,12 +53,18 @@ export class TriangleMeshGL{
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(triangles), gl.STATIC_DRAW);
 
+        ///////////////////////////////////////////////
+        
+        // WIREFRAME
         this.vaoWireFrame = gl.createVertexArray();
         gl.bindVertexArray(this.vaoWireFrame);
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positions);
         gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(positionAttributeLocation);
         
+        ///////////////////////////////////////////////////////
+
+
         const lines = [];
         for(let i = 0; i < this.nTriangleIndices/3; i++){
             const i0 = triangles[i*3+0];
@@ -83,6 +89,7 @@ export class TriangleMeshGL{
         this.gl.drawElements(this.gl.TRIANGLES, this.nTriangleIndices, this.gl.UNSIGNED_INT, 0);
     }
     // LAB 03 Aufgabe 1
+    // !!!!!!!!!!!!!!
     drawWireFrame(gl){
         gl.bindVertexArray(this.vaoWireFrame);
         gl.drawElements(gl.LINES, this.nLineIndicies, gl.UNSIGNED_INT, 0);   
