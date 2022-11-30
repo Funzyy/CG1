@@ -14,6 +14,7 @@ function Mesh2DApp() {
   async function setup() {
     const vertexShaderUrl = document.querySelector("#vertexShader").src;
     const fragmentShaderUrl = document.querySelector("#fragmentShader").src;
+
     mGlslProgram = new GLSLProgram(mCanvas, await loadDataFromURL(vertexShaderUrl), await loadDataFromURL(fragmentShaderUrl));
 
     // Load file.
@@ -66,6 +67,11 @@ function Mesh2DApp() {
     
    // Lab 02, Aufgabe 1(b)
    triangleMeshGL.draw();
+
+  // Lab 03, Aufgabe 1(b)
+  // if (document.getElementById("useWireFrame")){
+    // triangleMeshGL.drawWireFrame();
+  // }
    
     requestAnimationFrame(draw);
   }

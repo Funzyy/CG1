@@ -26,11 +26,14 @@ export class TriangleMeshGL{
 
         /////////////////////////////////////////////////////////////////
         // Create & Bind Vertex Array on the GPU
+        // vao = vertexArrayObject
         this.vao = gl.createVertexArray();
         gl.bindVertexArray(this.vao);
 
+        // VertexBuffer
         const pb = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, pb);
+        // Storage
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
         // Configure Vertex Position attribute
@@ -56,24 +59,33 @@ export class TriangleMeshGL{
         ///////////////////////////////////////////////
         
         // WIREFRAME
-        this.vaoWireFrame = gl.createVertexArray();
-        gl.bindVertexArray(this.vaoWireFrame);
+
+        this.positions = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.positions);
+
+        // neues Vertex Array erstellen da neue Werte für die Linien?
+        this.wireFrame = gl.createVertexArray();
+        // 
+        gl.bindVertexArray(this.wireFrame);
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positions);
         gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(positionAttributeLocation);
         
         ///////////////////////////////////////////////////////
-
-
+        
+        // geklaut 
+        // wo erklärung
         const lines = [];
+        this.nLineIndicies = lines.length;
         for(let i = 0; i < this.nTriangleIndices/3; i++){
+            // woher i*3+0
             const i0 = triangles[i*3+0];
             const i1 = triangles[i*3+1];
             const i2 = triangles[i*3+2];
 
             lines.push(i0, i1, i1, i2, i2, i0);
         }
-        this.nLineIndicies = lines.length;
+        
 
 
         /////////////////////////////////////////////////////////////////////////////////////
@@ -90,8 +102,9 @@ export class TriangleMeshGL{
     }
     // LAB 03 Aufgabe 1
     // !!!!!!!!!!!!!!
-    drawWireFrame(gl){
-        gl.bindVertexArray(this.vaoWireFrame);
-        gl.drawElements(gl.LINES, this.nLineIndicies, gl.UNSIGNED_INT, 0);   
+    drawWireFrame(){
+        this.gl.bindVertexArray(this.wireFrame);
+        // lines statt triangles 
+        this.gl.drawElements(this.gl.LINES, this.nLineIndicies, this.gl.UNSIGNED_INT, 0);   
     }
 }
