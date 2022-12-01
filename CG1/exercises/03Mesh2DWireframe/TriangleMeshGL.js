@@ -1,6 +1,6 @@
 // @ts-check
 import { SimpleMeshModelIO } from "./../../lib/helper/simple-mesh-model-io.js"
-
+import { glSafeCall } from "../../lib/helper/webgl.js";
 export class TriangleMeshGL{
 
     /**
@@ -60,14 +60,13 @@ export class TriangleMeshGL{
         
         // WIREFRAME
 
-        this.positions = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positions);
+        //Reihenfolge! VertexaArray zu createBuffer
+        this.wireFrame = gl.createVertexArray();
+        gl.bindVertexArray(this.wireFrame);
+        gl.bindBuffer(gl.ARRAY_BUFFER, pb);
 
         // neues Vertex Array erstellen da neue Werte für die Linien?
-        this.wireFrame = gl.createVertexArray();
-        // 
-        gl.bindVertexArray(this.wireFrame);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positions);
+
         gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(positionAttributeLocation);
         
@@ -76,7 +75,6 @@ export class TriangleMeshGL{
         // geklaut 
         // wo erklärung
         const lines = [];
-        this.nLineIndicies = lines.length;
         for(let i = 0; i < this.nTriangleIndices/3; i++){
             // woher i*3+0
             const i0 = triangles[i*3+0];
@@ -85,8 +83,11 @@ export class TriangleMeshGL{
 
             lines.push(i0, i1, i1, i2, i2, i0);
         }
-        
+        this.nLineIndicies = lines.length;
 
+        const linesIb = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, linesIb);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(lines), gl.STATIC_DRAW);
 
         /////////////////////////////////////////////////////////////////////////////////////
     }
@@ -103,8 +104,8 @@ export class TriangleMeshGL{
     // LAB 03 Aufgabe 1
     // !!!!!!!!!!!!!!
     drawWireFrame(){
-        this.gl.bindVertexArray(this.wireFrame);
+        glSafeCall(this.gl, this.gl.bindVertexArray, this.wireFrame);   
         // lines statt triangles 
-        this.gl.drawElements(this.gl.LINES, this.nLineIndicies, this.gl.UNSIGNED_INT, 0);   
+        glSafeCall(this.gl, this.gl.drawElements, this.gl.LINES, this.nLineIndicies, this.gl.UNSIGNED_INT, 0);   
     }
 }

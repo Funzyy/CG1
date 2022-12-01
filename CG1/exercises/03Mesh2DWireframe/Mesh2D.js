@@ -31,6 +31,9 @@ function Mesh2DApp() {
 
     let backgroundColor = document.getElementById("backgroundColor").value;
 
+    //Wireframe Color
+    let wireFrameColor = document.getElementById("WireFrameColor").value;
+
     let translateX = document.getElementById("TranslateX").value;
     let translateY = document.getElementById("TranslateY").value;
     let scaleX = document.getElementById("ScaleX").value;
@@ -40,6 +43,11 @@ function Mesh2DApp() {
     let rB = parseInt(backgroundColor.substr(1,2),16)/256.0;
     let gB = parseInt(backgroundColor.substr(3,2),16)/256.0;
     let bB = parseInt(backgroundColor.substr(5,2),16)/256.0;
+
+    // Farben für Wireframe rausholen
+    let fRB = parseInt(wireFrameColor.substr(1,2),16)/256.0;
+    let fGB = parseInt(wireFrameColor.substr(3,2),16)/256.0;
+    let fBB = parseInt(wireFrameColor.substr(5,2),16)/256.0;
 
     // Lab 02, Aufgabe 3(b)
     let rotationMatrix = Matrix3.rotation(rotation);
@@ -56,22 +64,31 @@ function Mesh2DApp() {
     gl.clearColor(rB, gB, bB, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-
+    // Wireframe Farbe setzen
+    let wireFrameFarbe = mGlslProgram.getUniformLocation("u_wfcolor");
+    let wireFrameBool = mGlslProgram.getUniformLocation("u_useWireframe");
+    
     // Shader benutzen
     mGlslProgram.use();
-  
-   // Lab 02, Aufgabe 3(b)
-    gl.uniformMatrix3fv(mat3_transform, true, transform);
-
-
+    gl.uniform3f(wireFrameFarbe, fRB, fGB, fBB);
     
-   // Lab 02, Aufgabe 1(b)
-   triangleMeshGL.draw();
+    // Lab 02, Aufgabe 3(b)
+    gl.uniformMatrix3fv(mat3_transform, true, transform);
+    
+    
+    
 
-  // Lab 03, Aufgabe 1(b)
-  // if (document.getElementById("useWireFrame")){
-    // triangleMeshGL.drawWireFrame();
-  // }
+    gl.uniform1i(wireFrameBool, 0);
+
+    // Lab 02, Aufgabe 1(b)
+    triangleMeshGL.draw();
+  
+    // Lab 03, Aufgabe 1(b)
+    if (document.getElementById("useWireFrame").checked){
+    gl.uniform1i(wireFrameBool, 1);
+    triangleMeshGL.drawWireFrame();
+  }
+
    
     requestAnimationFrame(draw);
   }
