@@ -31,7 +31,7 @@ function Mesh2DApp() {
 
     let backgroundColor = document.getElementById("backgroundColor").value;
 
-    //Wireframe Color
+    //Wireframe Farbwerte
     let wireFrameColor = document.getElementById("WireFrameColor").value;
 
     let translateX = document.getElementById("TranslateX").value;
@@ -40,6 +40,7 @@ function Mesh2DApp() {
     let scaleY = document.getElementById("ScaleY").value;
     let rotation = document.getElementById("Rotation").value;
     
+    // Farben für den Hintergrund
     let rB = parseInt(backgroundColor.substr(1,2),16)/256.0;
     let gB = parseInt(backgroundColor.substr(3,2),16)/256.0;
     let bB = parseInt(backgroundColor.substr(5,2),16)/256.0;
@@ -55,21 +56,22 @@ function Mesh2DApp() {
     let scaleMatrix = Matrix3.scaling(scaleX, scaleY);
     let aspectMatrix = Matrix3.aspect(mCanvas.width, mCanvas.height);
 
-    // Zuerst rotation*Skalierung dann * Position und zuletzt * Aspektratio
     let transform = Matrix3.multiply(aspectMatrix, Matrix3.multiply(translateMatrix, (Matrix3.multiply(rotationMatrix, scaleMatrix))));
     let mat3_transform = mGlslProgram.getUniformLocation("mat3_transform");
-    // Lab 02, Aufgabe 3(c)
 
     // Lab 02, Aufgabe 1(c)
     gl.clearColor(rB, gB, bB, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     // Wireframe Farbe setzen
+    // UniformLocation holt den Wert aus der frag Datei
     let wireFrameFarbe = mGlslProgram.getUniformLocation("u_wfcolor");
     let wireFrameBool = mGlslProgram.getUniformLocation("u_useWireframe");
     
     // Shader benutzen
     mGlslProgram.use();
+
+    // uniform 3 float für übergabe der Farbwerte
     gl.uniform3f(wireFrameFarbe, fRB, fGB, fBB);
     
     // Lab 02, Aufgabe 3(b)
@@ -77,13 +79,15 @@ function Mesh2DApp() {
     
     
     
-
+    // wireFrameBool auf False setzen
     gl.uniform1i(wireFrameBool, 0);
 
     // Lab 02, Aufgabe 1(b)
     triangleMeshGL.draw();
   
     // Lab 03, Aufgabe 1(b)
+    // Kontrolle ob Häckchen gesetzt ist.
+    // Falls ja, setze wireFrameBool auf True und zeichne Wireframe
     if (document.getElementById("useWireFrame").checked){
     gl.uniform1i(wireFrameBool, 1);
     triangleMeshGL.drawWireFrame();

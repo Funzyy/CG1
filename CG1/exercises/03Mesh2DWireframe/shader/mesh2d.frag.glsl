@@ -11,10 +11,11 @@ out vec4 fragColor;
 
 void main()
 {
-	// Lab 02, Aufgabe 2
+	// Lab 03, Aufgabe (e)
 	if (u_useWireframe == true){
 		fragColor = vec4(u_wfcolor.rgb, 1.0);
 	}
+	// Lab 02, Aufgabe 2
 	else{
 		fragColor = vec4(v_Color.rgb, 1.0);
 		}
